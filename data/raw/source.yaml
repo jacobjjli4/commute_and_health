@@ -1,0 +1,29 @@
+health_ineq_online_table_1.csv.dvc:
+    obtained: 2023-10-13
+    source: https://healthinequality.org/data/
+    description: |
+        Chetty et al (JAMA 2016) Online Data Tables
+
+health_ineq_online_table_2.csv.dvc:
+    obtained: 2023-10-13
+    source: https://healthinequality.org/data/
+    description: |
+        Chetty et al (JAMA 2016) Online Data Tables
+
+atus_00003.dat.dvc:
+    obtained: 2023-12-03
+    source: https://www.atusdata.org/atus-action/variables/group
+    description: |
+        American Time Use Survey Data from IPUMS
+
+qcew-county-msa-csa-crosswalk-2013.csv.dvc:
+    obtained: 2023-12-05
+    source: https://www.bls.gov/cew/classifications/areas/county-msa-csa-crosswalk.htm
+    description: |
+        BLS Crosswalk between Counties and 2013 Metropolitan Statistical Areas
+
+uber_entry_msa.dta.dvc:
+    obtained: 2023-12-05
+    source: https://doi.org/10.1016/j.euroecorev.2018.05.006
+    description: |
+        Uber entry and exit dates by Metropolitan Statistical Area. 

@@ -1,0 +1,2007 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/build_log.log
+  log type:  text
+ opened on:  10 Dec 2023, 16:41:35
+
+. 
+. capture mkdir "$root/results"
+
+. capture mkdir "$root/data/merge"
+
+. 
+. * Load data from .dat format provided by IPUMS into .dta format using the IPUMS-
+. * provided do-file. Save the converted file as commute.dta.
+. do "$root/code/dat_to_dta.do"
+
+. clear all
+
+. setroot
+setroot is searching for the root project path of "/Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health"
+root project path found; setting "global root = /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health" 
+
+. 
+. set more off
+
+. 
+. clear
+
+. quietly infix                            ///
+>   long    year                  1-5      ///
+>   double  caseid                6-19     ///
+>   long    serial                20-26    ///
+>   long    strata                27-32    ///
+>   byte    region                33-33    ///
+>   byte    statefip              34-35    ///
+>   byte    metro                 36-37    ///
+>   byte    msasize               38-38    ///
+>   long    metarea               39-43    ///
+>   long    county                44-48    ///
+>   byte    pernum                49-50    ///
+>   int     lineno                51-53    ///
+>   double  wt06                  54-70    ///
+>   double  wt20                  71-85    ///
+>   int     age                   86-88    ///
+>   byte    sex                   89-90    ///
+>   int     race                  91-94    ///
+>   byte    genhealth             95-96    ///
+>   int     educyrs               97-99    ///
+>   byte    empstat               100-101  ///
+>   int     occ2_cps8             102-105  ///
+>   int     uhrsworkt             106-109  ///
+>   double  earnweek              110-116  ///
+>   byte    wb_resp               117     -118  ///
+>   byte    rested                119-120  ///
+>   byte    highbp                121-122  ///
+>   byte    painmed               123-124  ///
+>   int     food_preparation      125-128  ///
+>   int     participate_exercise  129-132  ///
+>   int     sleep                 133-136  ///
+>   int     travel_work           137-140  ///
+>   using `"$root/data/raw/atus_00003.dat"'
+
+. 
+. replace wt20                 = wt20                 / 1000000
+(16,751 real changes made)
+
+. replace earnweek             = earnweek             / 100
+(236,245 real changes made)
+
+. 
+. format caseid               %14.0f
+
+. format wt06                 %17.0g
+
+. format wt20                 %15.6f
+
+. format earnweek             %7.2f
+
+. 
+. label var year                 `"Survey year"'
+
+. label var caseid               `"ATUS Case ID"'
+
+. label var serial               `"Household serial number"'
+
+. label var strata               `"Scrambled pseudo primary sampling unit (PSU) collapsed stratum "'
+
+. label var region               `"Region"'
+
+. label var statefip             `"FIPS State Code"'
+
+. label var metro                `"Metropolitan/central city status"'
+
+. label var msasize              `"MSA/PMSA size"'
+
+. label var metarea              `"Consolidated MSA name"'
+
+. label var county               `"FIPS County code"'
+
+. label var pernum               `"Person number (general)"'
+
+. label var lineno               `"Person line number"'
+
+. label var wt06                 `"Person weight, 2006 methodology"'
+
+. label var wt20                 `"Person weight, 2020 methodology"'
+
+. label var age                  `"Age"'
+
+. label var sex                  `"Sex"'
+
+. label var race                 `"Race"'
+
+. label var genhealth            `"General health"'
+
+. label var educyrs              `"Years of education"'
+
+. label var empstat              `"Labor force status"'
+
+. label var occ2_cps8            `"General occupation category, main job (CPS)"'
+
+. label var uhrsworkt            `"Hours usually worked per week"'
+
+. label var earnweek             `"Weekly earnings"'
+
+. label var wb_resp              `"Well-Being Module Respondent"'
+
+. label var rested               `"Well-rested yesterday"'
+
+. label var highbp               `"High blood pressure in last five years"'
+
+. label var painmed              `"Pain medication yesterday"'
+
+. label var food_preparation     `"preparing for food and drink"'
+
+. label var participate_exercise `"Participating in sports or exercise"'
+
+. label var sleep                `"Sleeping (010101)"'
+
+. label var travel_work          `"ACT: Traveling"'
+
+. 
+. label define strata_lbl 009999 `"Not generated"'
+
+. label values strata strata_lbl
+
+. 
+. label define region_lbl 1 `"Northeast"'
+
+. label define region_lbl 2 `"Midwest"', add
+
+. label define region_lbl 3 `"South"', add
+
+. label define region_lbl 4 `"West"', add
+
+. label values region region_lbl
+
+. 
+. label define statefip_lbl 01 `"Alabama"'
+
+. label define statefip_lbl 02 `"Alaska"', add
+
+. label define statefip_lbl 04 `"Arizona"', add
+
+. label define statefip_lbl 05 `"Arkansas"', add
+
+. label define statefip_lbl 06 `"California"', add
+
+. label define statefip_lbl 08 `"Colorado"', add
+
+. label define statefip_lbl 09 `"Connecticut"', add
+
+. label define statefip_lbl 10 `"Delaware"', add
+
+. label define statefip_lbl 11 `"District of Columbia"', add
+
+. label define statefip_lbl 12 `"Florida"', add
+
+. label define statefip_lbl 13 `"Georgia"', add
+
+. label define statefip_lbl 15 `"Hawaii"', add
+
+. label define statefip_lbl 16 `"Idaho"', add
+
+. label define statefip_lbl 17 `"Illinois"', add
+
+. label define statefip_lbl 18 `"Indiana"', add
+
+. label define statefip_lbl 19 `"Iowa"', add
+
+. label define statefip_lbl 20 `"Kansas"', add
+
+. label define statefip_lbl 21 `"Kentucky"', add
+
+. label define statefip_lbl 22 `"Louisiana"', add
+
+. label define statefip_lbl 23 `"Maine"', add
+
+. label define statefip_lbl 24 `"Maryland"', add
+
+. label define statefip_lbl 25 `"Massachusetts"', add
+
+. label define statefip_lbl 26 `"Michigan"', add
+
+. label define statefip_lbl 27 `"Minnesota"', add
+
+. label define statefip_lbl 28 `"Mississippi"', add
+
+. label define statefip_lbl 29 `"Missouri"', add
+
+. label define statefip_lbl 30 `"Montana"', add
+
+. label define statefip_lbl 31 `"Nebraska"', add
+
+. label define statefip_lbl 32 `"Nevada"', add
+
+. label define statefip_lbl 33 `"New Hampshire"', add
+
+. label define statefip_lbl 34 `"New Jersey"', add
+
+. label define statefip_lbl 35 `"New Mexico"', add
+
+. label define statefip_lbl 36 `"New York"', add
+
+. label define statefip_lbl 37 `"North Carolina"', add
+
+. label define statefip_lbl 38 `"North Dakota"', add
+
+. label define statefip_lbl 39 `"Ohio"', add
+
+. label define statefip_lbl 40 `"Oklahoma"', add
+
+. label define statefip_lbl 41 `"Oregon"', add
+
+. label define statefip_lbl 42 `"Pennsylvania"', add
+
+. label define statefip_lbl 44 `"Rhode Island"', add
+
+. label define statefip_lbl 45 `"South Carolina"', add
+
+. label define statefip_lbl 46 `"South Dakota"', add
+
+. label define statefip_lbl 47 `"Tennessee"', add
+
+. label define statefip_lbl 48 `"Texas"', add
+
+. label define statefip_lbl 49 `"Utah"', add
+
+. label define statefip_lbl 50 `"Vermont"', add
+
+. label define statefip_lbl 51 `"Virginia"', add
+
+. label define statefip_lbl 53 `"Washington"', add
+
+. label define statefip_lbl 54 `"West Virginia"', add
+
+. label define statefip_lbl 55 `"Wisconsin"', add
+
+. label define statefip_lbl 56 `"Wyoming"', add
+
+. label values statefip statefip_lbl
+
+. 
+. label define metro_lbl 01 `"Metropolitan, central city"'
+
+. label define metro_lbl 02 `"Metropolitan, balance of MSA"', add
+
+. label define metro_lbl 03 `"Metropolitan, not identified"', add
+
+. label define metro_lbl 04 `"Nonmetropolitan"', add
+
+. label define metro_lbl 05 `"Not identified"', add
+
+. label values metro metro_lbl
+
+. 
+. label define msasize_lbl 0 `"Not identified or non-metropolitan"'
+
+. label define msasize_lbl 2 `"100,000 - 249,999"', add
+
+. label define msasize_lbl 3 `"250,000 - 499,999"', add
+
+. label define msasize_lbl 4 `"500,000 - 999,999"', add
+
+. label define msasize_lbl 5 `"1,000,000 - 2,499,999"', add
+
+. label define msasize_lbl 6 `"2,500,000 - 4,999,999"', add
+
+. label define msasize_lbl 7 `"5,000,000+"', add
+
+. label values msasize msasize_lbl
+
+. 
+. label define metarea_lbl 00000 `"Not Identified or NonMetropolitan"'
+
+. label define metarea_lbl 00160 `"Albany-Schenectady, NY"', add
+
+. label define metarea_lbl 00200 `"Albuquerque-Santa Fe-Las Vegas, NM"', add
+
+. label define metarea_lbl 00460 `"Appleton-Oshkosh-Neenah, WI"', add
+
+. label define metarea_lbl 00521 `"Atlanta--Athens-Clarke County--Sandy Springs, GA"', add
+
+. label define metarea_lbl 01120 `"Boston, MA"', add
+
+. label define metarea_lbl 01121 `"Boston-Worchester-Manchester, MS-NH-CT-ME"', add
+
+. label define metarea_lbl 01122 `"Boston-Worcester-Providence, MA-RI-NH-CT"', add
+
+. label define metarea_lbl 01160 `"Bridgeport-New Haven-Stamford, CT"', add
+
+. label define metarea_lbl 01360 `"Cedar Rapids-Iowa City, IA"', add
+
+. label define metarea_lbl 01480 `"Charleston-Huntington-Ashland, WV-OH-KY"', add
+
+. label define metarea_lbl 01560 `"Chattanooga-Cleveland-Dalton, TN-GA-AL"', add
+
+. label define metarea_lbl 01600 `"Chicago-Gary-Kenosha, IL-IN-WI"', add
+
+. label define metarea_lbl 01601 `"Chicago-Naperville-Michigan City, IL-IN-WI"', add
+
+. label define metarea_lbl 01640 `"Cincinnati-Hamilton, OH-KY-IN"', add
+
+. label define metarea_lbl 01641 `"Cincinnati-Middletown-Wilmington, OH-KY-IN"', add
+
+. label define metarea_lbl 01680 `"Cleveland-Akron, OH"', add
+
+. label define metarea_lbl 01681 `"Cleveland-Akron-Elyria, OH"', add
+
+. label define metarea_lbl 01800 `"Columbus-Auburn-Opelika, GA-AL"', add
+
+. label define metarea_lbl 01920 `"Dallas-Fort Worth, TX"', add
+
+. label define metarea_lbl 01921 `"Dallas-Fort Worth, TX"', add
+
+. label define metarea_lbl 02000 `"Dayton-Springfield-Greenville, OH"', add
+
+. label define metarea_lbl 02080 `"Denver-Boulder-Greeley, CO"', add
+
+. label define metarea_lbl 02081 `"Denver-Aurora-Boulder, CO"', add
+
+. label define metarea_lbl 02160 `"Detroit-Ann Arbor-Flint, MI"', add
+
+. label define metarea_lbl 02161 `"Detroit-Warren-Flint, MI"', add
+
+. label define metarea_lbl 02310 `"El Paso-Las Cruces, TX-NM"', add
+
+. label define metarea_lbl 02700 `"Cape Coral-Fort Myers-Naples, FL"', add
+
+. label define metarea_lbl 02840 `"Fresno-Madera, CA"', add
+
+. label define metarea_lbl 03000 `"Grand Rapids-Muskegon-Holland, MI (part)"', add
+
+. label define metarea_lbl 03120 `"Greensboro-Winston-Salem-High Point, NC (part)"', add
+
+. label define metarea_lbl 03160 `"Greenville, SC"', add
+
+. label define metarea_lbl 03240 `"Harrisburg-York-Lebanon, PA"', add
+
+. label define metarea_lbl 03284 `"Hartford-West Hartford, CT"', add
+
+. label define metarea_lbl 03360 `"Houston-Galveston-Brazoria, TX"', add
+
+. label define metarea_lbl 03361 `"Houston-Baytown-Huntsville, TX (part)"', add
+
+. label define metarea_lbl 03720 `"Kalamazoo-Battle Creek-Portage, MI"', add
+
+. label define metarea_lbl 03440 `"Huntsville-Decatur, AL"', add
+
+. label define metarea_lbl 03480 `"Indianapolis-Anderson-Columbus, IN (part)"', add
+
+. label define metarea_lbl 03660 `"Johnson City-Kingsport-Bristol, TN-VA (part)"', add
+
+. label define metarea_lbl 04400 `"Little Rock-North Little Rock, AR"', add
+
+. label define metarea_lbl 04480 `"Los Angeles-Riverside-Orange County, CA"', add
+
+. label define metarea_lbl 04481 `"Los Angeles-Long Beach-Riverside, CA"', add
+
+. label define metarea_lbl 04680 `"Macon-Warner-Robins-Fort Valley, GA (part)"', add
+
+. label define metarea_lbl 04720 `"Madison-Janesville-Beloit, WI"', add
+
+. label define metarea_lbl 05000 `"Miami-Fort Lauderdale, FL"', add
+
+. label define metarea_lbl 05080 `"Milwaukee-Racine, WI"', add
+
+. label define metarea_lbl 05081 `"Milwaukee-Racine-Waukesha, WI"', add
+
+. label define metarea_lbl 05120 `"Minneapolis-St. Paul-St. Cloud, MN-WI (part)"', add
+
+. label define metarea_lbl 05160 `"Mobile-Daphne-Fairhope, AL"', add
+
+. label define metarea_lbl 05600 `"New York-Northern New Jersey-Long Island, NY-NJ-CT-PA"', add
+
+. label define metarea_lbl 05601 `"New York-Newark-Bridgeport, NY-NH-CT-PA"', add
+
+. label define metarea_lbl 05960 `"Orlando-Deltona-Daytona Beach, FL"', add
+
+. label define metarea_lbl 06160 `"Philadelphia-Wilmington-Atlantic City, PA-NJ-DE-MD"', add
+
+. label define metarea_lbl 06161 `"Philadelphia-Camden-Vineland, PA-NJ-DE-MD"', add
+
+. label define metarea_lbl 06400 `"Portland-Salem, OR-WA"', add
+
+. label define metarea_lbl 06401 `"Portland-Lewiston-South Portland, ME"', add
+
+. label define metarea_lbl 06640 `"Raleigh-Durham-Cary, NC (part)"', add
+
+. label define metarea_lbl 06920 `"Sacramento-Yolo, CA"', add
+
+. label define metarea_lbl 06921 `"Sacramento-Arden-Arcade-Truckee, CA-NV"', add
+
+. label define metarea_lbl 07160 `"Salt Lake City-Ogden-Clearfield, UT (part)"', add
+
+. label define metarea_lbl 07360 `"San Francisco-Oakland-San Jose, CA"', add
+
+. label define metarea_lbl 07600 `"Seattle-Tacoma-Bremerton, WA"', add
+
+. label define metarea_lbl 07601 `"Seattle-Tacoma-Olympia, WA"', add
+
+. label define metarea_lbl 07800 `"South Bend-Elkhart-Mishawaka, IN-MI"', add
+
+. label define metarea_lbl 07840 `"Spokane-Spokane Valley-Coeur d'Alene, WA-ID"', add
+
+. label define metarea_lbl 08840 `"Washington-Baltimore, DC-MD-VA-WV"', add
+
+. label define metarea_lbl 08841 `"Washington-Baltimore-Northern Virginia, DC-MD-VA-WV"', add
+
+. label define metarea_lbl 08780 `"Visalia-Porterville-Hanford, CA"', add
+
+. label define metarea_lbl 99998 `"Blank"', add
+
+. label define metarea_lbl 99999 `"NIU (Not in universe)"', add
+
+. label values metarea metarea_lbl
+
+. 
+. label define pernum_lbl 01 `"1"'
+
+. label define pernum_lbl 02 `"2"', add
+
+. label define pernum_lbl 03 `"3"', add
+
+. label define pernum_lbl 04 `"4"', add
+
+. label define pernum_lbl 05 `"5"', add
+
+. label define pernum_lbl 06 `"6"', add
+
+. label define pernum_lbl 07 `"7"', add
+
+. label define pernum_lbl 08 `"8"', add
+
+. label define pernum_lbl 09 `"9"', add
+
+. label define pernum_lbl 10 `"10"', add
+
+. label define pernum_lbl 11 `"11"', add
+
+. label define pernum_lbl 12 `"12"', add
+
+. label define pernum_lbl 13 `"13"', add
+
+. label define pernum_lbl 14 `"14"', add
+
+. label define pernum_lbl 15 `"15"', add
+
+. label define pernum_lbl 16 `"16"', add
+
+. label values pernum pernum_lbl
+
+. 
+. label define lineno_lbl 001 `"1"'
+
+. label define lineno_lbl 002 `"2"', add
+
+. label define lineno_lbl 003 `"3"', add
+
+. label define lineno_lbl 004 `"4"', add
+
+. label define lineno_lbl 005 `"5"', add
+
+. label define lineno_lbl 006 `"6"', add
+
+. label define lineno_lbl 007 `"7"', add
+
+. label define lineno_lbl 008 `"8"', add
+
+. label define lineno_lbl 009 `"9"', add
+
+. label define lineno_lbl 010 `"10"', add
+
+. label define lineno_lbl 011 `"11"', add
+
+. label define lineno_lbl 012 `"12"', add
+
+. label define lineno_lbl 013 `"13"', add
+
+. label define lineno_lbl 014 `"14"', add
+
+. label define lineno_lbl 015 `"15"', add
+
+. label define lineno_lbl 016 `"16"', add
+
+. label define lineno_lbl 017 `"17"', add
+
+. label define lineno_lbl 018 `"18"', add
+
+. label define lineno_lbl 019 `"19"', add
+
+. label define lineno_lbl 999 `"NIU (Not in universe)"', add
+
+. label values lineno lineno_lbl
+
+. 
+. label define sex_lbl 01 `"Male"'
+
+. label define sex_lbl 02 `"Female"', add
+
+. label define sex_lbl 99 `"NIU (Not in universe)"', add
+
+. label values sex sex_lbl
+
+. 
+. label define race_lbl 0100 `"White only"'
+
+. label define race_lbl 0110 `"Black only"', add
+
+. label define race_lbl 0120 `"American Indian, Alaskan Native"', add
+
+. label define race_lbl 0130 `"Asian or Pacific Islander"', add
+
+. label define race_lbl 0131 `"Asian only"', add
+
+. label define race_lbl 0132 `"Hawaiian Pacific Islander only"', add
+
+. label define race_lbl 0200 `"White-Black"', add
+
+. label define race_lbl 0201 `"White-American Indian"', add
+
+. label define race_lbl 0202 `"White-Asian"', add
+
+. label define race_lbl 0203 `"White-Hawaiian"', add
+
+. label define race_lbl 0210 `"Black-American Indian"', add
+
+. label define race_lbl 0211 `"Black-Asian"', add
+
+. label define race_lbl 0212 `"Black-Hawaiian"', add
+
+. label define race_lbl 0220 `"American Indian-Asian"', add
+
+. label define race_lbl 0221 `"American Indian-Hawaiian"', add
+
+. label define race_lbl 0230 `"Asian-Hawaiian"', add
+
+. label define race_lbl 0300 `"White-Black-American Indian"', add
+
+. label define race_lbl 0301 `"White-Black-Asian"', add
+
+. label define race_lbl 0302 `"White-Black-Hawaiian"', add
+
+. label define race_lbl 0310 `"White-American Indian-Asian"', add
+
+. label define race_lbl 0311 `"White-American Indian-Hawaiian"', add
+
+. label define race_lbl 0320 `"White-Asian-Hawaiian"', add
+
+. label define race_lbl 0330 `"Black-American Indian-Asian"', add
+
+. label define race_lbl 0331 `"Black-American Indian-Hawaiian"', add
+
+. label define race_lbl 0340 `"Black-Asian-Hawaiian"', add
+
+. label define race_lbl 0350 `"American Indian-Asian-Hawaiian"', add
+
+. label define race_lbl 0398 `"Other 3 race combinations"', add
+
+. label define race_lbl 0399 `"2 or 3 races, unspecified"', add
+
+. label define race_lbl 0400 `"White-Black-American Indian-Asian"', add
+
+. label define race_lbl 0401 `"White-Black-American Indian-Hawaiian"', add
+
+. label define race_lbl 0402 `"White-Black-Asian-Hawaiian"', add
+
+. label define race_lbl 0403 `"Black-American Indian-Asian-Hawaiian"', add
+
+. label define race_lbl 0404 `"White-American Indian-Asian-Hawaiian"', add
+
+. label define race_lbl 0500 `"White-Black-American Indian-Asian-Hawaiian"', add
+
+. label define race_lbl 0599 `"4 or 5 races, unspecified"', add
+
+. label define race_lbl 9999 `"NIU (Not in universe)"', add
+
+. label values race race_lbl
+
+. 
+. label define genhealth_lbl 01 `"Excellent"'
+
+. label define genhealth_lbl 02 `"Very good"', add
+
+. label define genhealth_lbl 03 `"Good"', add
+
+. label define genhealth_lbl 04 `"Fair"', add
+
+. label define genhealth_lbl 05 `"Poor"', add
+
+. label define genhealth_lbl 96 `"Refused"', add
+
+. label define genhealth_lbl 97 `"Don't know"', add
+
+. label define genhealth_lbl 99 `"NIU (Not in universe)"', add
+
+. label values genhealth genhealth_lbl
+
+. 
+. label define educyrs_lbl 100 `"Grades 1-12"'
+
+. label define educyrs_lbl 101 `"Less than first grade"', add
+
+. label define educyrs_lbl 102 `"First through fourth grade"', add
+
+. label define educyrs_lbl 105 `"Fifth through sixth grade"', add
+
+. label define educyrs_lbl 107 `"Seventh through eighth grade"', add
+
+. label define educyrs_lbl 109 `"Ninth grade"', add
+
+. label define educyrs_lbl 110 `"Tenth grade"', add
+
+. label define educyrs_lbl 111 `"Eleventh grade"', add
+
+. label define educyrs_lbl 112 `"Twelfth grade"', add
+
+. label define educyrs_lbl 200 `"College"', add
+
+. label define educyrs_lbl 213 `"College--one year"', add
+
+. label define educyrs_lbl 214 `"College--two years"', add
+
+. label define educyrs_lbl 215 `"College--three years"', add
+
+. label define educyrs_lbl 216 `"College--four years"', add
+
+. label define educyrs_lbl 217 `"Bachelor's degree"', add
+
+. label define educyrs_lbl 300 `"Advanced degree"', add
+
+. label define educyrs_lbl 316 `"Master's degree"', add
+
+. label define educyrs_lbl 317 `"Master's degree--one year program"', add
+
+. label define educyrs_lbl 318 `"Master's degree--two year program"', add
+
+. label define educyrs_lbl 319 `"Master's degree--three+ year program"', add
+
+. label define educyrs_lbl 320 `"Professional degree"', add
+
+. label define educyrs_lbl 321 `"Doctoral degree"', add
+
+. label define educyrs_lbl 999 `"NIU (Not in universe)"', add
+
+. label values educyrs educyrs_lbl
+
+. 
+. label define empstat_lbl 01 `"Employed - at work"'
+
+. label define empstat_lbl 02 `"Employed - absent"', add
+
+. label define empstat_lbl 03 `"Unemployed - on layoff"', add
+
+. label define empstat_lbl 04 `"Unemployed - looking"', add
+
+. label define empstat_lbl 05 `"Not in labor force"', add
+
+. label define empstat_lbl 99 `"NIU (Not in universe)"', add
+
+. label values empstat empstat_lbl
+
+. 
+. label define occ2_cps8_lbl 0110 `"Management occupations"'
+
+. label define occ2_cps8_lbl 0111 `"Business and financial operations occupations"', add
+
+. label define occ2_cps8_lbl 0120 `"Computer and mathematical science occupations"', add
+
+. label define occ2_cps8_lbl 0121 `"Architecture and engineering occupations"', add
+
+. label define occ2_cps8_lbl 0122 `"Life, physical, and social science occupations"', add
+
+. label define occ2_cps8_lbl 0123 `"Community and social service occupations"', add
+
+. label define occ2_cps8_lbl 0124 `"Legal occupations"', add
+
+. label define occ2_cps8_lbl 0125 `"Education, training, and library occupations"', add
+
+. label define occ2_cps8_lbl 0126 `"Arts, design, entertainment, sports, and media occupations"', add
+
+. label define occ2_cps8_lbl 0127 `"Healthcare practitioner and technical occupations"', add
+
+. label define occ2_cps8_lbl 0130 `"Healthcare support occupations"', add
+
+. label define occ2_cps8_lbl 0131 `"Protective service occupations"', add
+
+. label define occ2_cps8_lbl 0132 `"Food preparation and serving related occupations"', add
+
+. label define occ2_cps8_lbl 0133 `"Building and grounds cleaning and maintenance occupations"', add
+
+. label define occ2_cps8_lbl 0134 `"Personal care and service occupations"', add
+
+. label define occ2_cps8_lbl 0140 `"Sales and related occupations"', add
+
+. label define occ2_cps8_lbl 0150 `"Office and administrative support occupations"', add
+
+. label define occ2_cps8_lbl 0160 `"Farming, fishing, and forestry occupations"', add
+
+. label define occ2_cps8_lbl 0170 `"Construction and extraction occupations"', add
+
+. label define occ2_cps8_lbl 0180 `"Installation, maintenance, and repair occupations"', add
+
+. label define occ2_cps8_lbl 0190 `"Production occupations"', add
+
+. label define occ2_cps8_lbl 0200 `"Transportation and material moving occupations"', add
+
+. label define occ2_cps8_lbl 0210 `"Armed Forces"', add
+
+. label define occ2_cps8_lbl 9999 `"NIU (Not in universe)"', add
+
+. label values occ2_cps8 occ2_cps8_lbl
+
+. 
+. label define wb_resp_lbl 00 `"No"'
+
+. label define wb_resp_lbl 01 `"Yes"', add
+
+. label define wb_resp_lbl 99 `"Not an ATUS respondent"', add
+
+. label values wb_resp wb_resp_lbl
+
+. 
+. label define rested_lbl 01 `"Very"'
+
+. label define rested_lbl 02 `"Somewhat"', add
+
+. label define rested_lbl 03 `"A Little"', add
+
+. label define rested_lbl 04 `"Not at all"', add
+
+. label define rested_lbl 99 `"NIU (Not in universe)"', add
+
+. label values rested rested_lbl
+
+. 
+. label define highbp_lbl 01 `"Yes"'
+
+. label define highbp_lbl 02 `"No"', add
+
+. label define highbp_lbl 99 `"NIU (Not in universe)"', add
+
+. label values highbp highbp_lbl
+
+. 
+. label define painmed_lbl 01 `"Yes"'
+
+. label define painmed_lbl 02 `"No"', add
+
+. label define painmed_lbl 99 `"NIU (Not in universe)"', add
+
+. label values painmed painmed_lbl
+
+. 
+. capture mkdir "$root/data/derived"
+
+. save "$root/data/derived/commute.dta", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/data/derived/commute.dta saved
+
+. 
+end of do-file
+
+. 
+. * Clean commute.dta and save as commute_cleaned.dta.
+. do "$root/code/clean.do"
+
+. /*******************************************************************************
+> Title:                  ECO481 Final Paper Data Cleaning Script
+> Authors:                Jia Jun (Jacob) Li, 1006824750
+> Date Created:   November 17, 2023
+> Date Updated:   December 5, 2023
+> 
+> Stata Version:  17.0 BE
+> Stata Packages: estout
+>                                 binscatter
+>                                 setroot
+> 
+> *******************************************************************************/
+. 
+. clear all
+
+. set linesize 240
+
+. 
+. setroot
+setroot is searching for the root project path of "/Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health"
+root project path found; setting "global root = /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health" 
+
+. capture mkdir "$root/data/derived/"
+
+. 
+. use "$root/data/raw/uber_entry_msa.dta", clear
+
+. keep year met2013 uber
+
+. * change MSA code to be consistent with crosswalk
+. rename met2013 msacode
+
+. replace msacode = msacode/10
+(350 real changes made)
+
+. save "$root/data/derived/uber_entry_msa_clean.dta", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/data/derived/uber_entry_msa_clean.dta saved
+
+. 
+. * generate MSA crosswalk
+. import delimited "$root/data/raw/qcew-county-msa-csa-crosswalk-2013.csv", clear
+(encoding automatically selected: UTF-8)
+(6 vars, 1,881 obs)
+
+. replace msacode = substr(msacode, 2, .)
+(1,881 real changes made)
+
+. drop csacode csatitle
+
+. rename countycode county
+
+. save "$root/data/derived/county_msa_crosswalk.dta", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/data/derived/county_msa_crosswalk.dta saved
+
+. 
+. * assign MSA values to observations in the ATUS dataset
+. use "$root/data/derived/commute.dta", clear
+
+. merge m:1 county using "$root/data/derived/county_msa_crosswalk.dta"
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       133,883
+        from master                   132,409  (_merge==1)
+        from using                      1,474  (_merge==2)
+
+    Matched                           104,182  (_merge==3)
+    -----------------------------------------
+
+. destring(msacode), replace
+msacode: all characters numeric; replaced as int
+(132409 missing values generated)
+
+. // br if (msacode==.)&(metarea != 99999)&(metarea != 0)&(metarea != 99998)
+. 
+. replace msacode=1946 if (metarea==3440) & (msacode==.)
+(261 real changes made)
+
+. replace msacode=3078 if (metarea==4400) & (msacode==.)
+(275 real changes made)
+
+. replace msacode=3490 if (metarea==7360) & (msacode==.)
+(1,946 real changes made)
+
+. replace msacode=3108 if (metarea==4480) & (msacode==.)
+(233 real changes made)
+
+. replace msacode=3108 if (metarea==4481) & (msacode==.)
+(780 real changes made)
+
+. replace msacode=1974 if (metarea==2080) & (msacode==.)
+(79 real changes made)
+
+. replace msacode=1974 if (metarea==2081) & (msacode==.)
+(796 real changes made)
+
+. replace msacode=1486 if (metarea==1160) & (msacode==.)
+(765 real changes made)
+
+. replace msacode=2554 if (metarea==3284) & (msacode==.)
+(331 real changes made)
+
+. replace msacode=1966 if (metarea==5960) & (msacode==.)
+(263 real changes made)
+
+. replace msacode=3310 if (metarea==5000) & (msacode==.)
+(217 real changes made)
+
+. replace msacode=1058 if (metarea==160) & (msacode==.)
+(182 real changes made)
+
+. replace msacode=1154 if (metarea==460) & (msacode==.)
+(190 real changes made)
+
+. replace msacode=1202 if (metarea==521) & (msacode==.)
+(721 real changes made)
+
+. replace msacode=1446 if (metarea==1120) & (msacode==.)
+(650 real changes made)
+
+. replace msacode=1446 if (metarea==1121) & (msacode==.)
+(2,535 real changes made)
+
+. replace msacode=1446 if (metarea==1122) & (msacode==.)
+(225 real changes made)
+
+. replace msacode=1662 if (metarea==1480) & (msacode==.)
+(51 real changes made)
+
+. replace msacode=1686 if (metarea==1560) & (msacode==.)
+(172 real changes made)
+
+. replace msacode=1698 if (metarea==1600) & (msacode==.)
+(812 real changes made)
+
+. replace msacode=1698 if (metarea==1601) & (msacode==.)
+(5,262 real changes made)
+
+. replace msacode=1714 if (metarea==1641) & (msacode==.)
+(63 real changes made)
+
+. replace msacode=1746 if (metarea==1680) & (msacode==.)
+(123 real changes made)
+
+. replace msacode=1746 if (metarea==1681) & (msacode==.)
+(750 real changes made)
+
+. replace msacode=1798 if (metarea==1800) & (msacode==.)
+(54 real changes made)
+
+. replace msacode=1910 if (metarea==1920) & (msacode==.)
+(347 real changes made)
+
+. replace msacode=1910 if (metarea==1921) & (msacode==.)
+(1,409 real changes made)
+
+. replace msacode=1938 if (metarea==2000) & (msacode==.)
+(323 real changes made)
+
+. replace msacode=1982 if (metarea==2160) & (msacode==.)
+(447 real changes made)
+
+. replace msacode=1982 if (metarea==2161) & (msacode==.)
+(463 real changes made)
+
+. replace msacode=2134 if (metarea==2310) & (msacode==.)
+(172 real changes made)
+
+. replace msacode=2434 if (metarea==3000) & (msacode==.)
+(183 real changes made)
+
+. replace msacode=2466 if (metarea==3120) & (msacode==.)
+(578 real changes made)
+
+. replace msacode=2486 if (metarea==3160) & (msacode==.)
+(249 real changes made)
+
+. replace msacode=2554 if (metarea==3284) & (msacode==.)
+(0 real changes made)
+
+. replace msacode=2642 if (metarea==3361) & (msacode==.)
+(197 real changes made)
+
+. replace msacode=2642 if (metarea==3360) & (msacode==.)
+(300 real changes made)
+
+. replace msacode=2690 if (metarea==3480) & (msacode==.)
+(495 real changes made)
+
+. replace msacode=2870 if (metarea==3660) & (msacode==.)
+(300 real changes made)
+
+. replace msacode=1298 if (metarea==3720) & (msacode==.)
+(81 real changes made)
+
+. replace msacode=3142 if (metarea==4680) & (msacode==.)
+(141 real changes made)
+
+. replace msacode=3154 if (metarea==4720) & (msacode==.)
+(150 real changes made)
+
+. replace msacode=3334 if (metarea==5080) & (msacode==.)
+(174 real changes made)
+
+. replace msacode=3334 if (metarea==5081) & (msacode==.)
+(1,184 real changes made)
+
+. replace msacode=3346 if (metarea==5120) & (msacode==.)
+(1,097 real changes made)
+
+. replace msacode=3798 if (metarea==6161) & (msacode==.)
+(228 real changes made)
+
+. replace msacode=3890 if (metarea==6400) & (msacode==.)
+(1,104 real changes made)
+
+. replace msacode=3890 if (metarea==6401) & (msacode==.)
+(48 real changes made)
+
+. replace msacode=3958 if (metarea==6640) & (msacode==.)
+(831 real changes made)
+
+. replace msacode=4162 if (metarea==7160) & (msacode==.)
+(1,403 real changes made)
+
+. replace msacode=4266 if (metarea==7600) & (msacode==.)
+(217 real changes made)
+
+. replace msacode=4266 if (metarea==7601) & (msacode==.)
+(1,454 real changes made)
+
+. replace msacode=4406 if (metarea==7840) & (msacode==.)
+(204 real changes made)
+
+. replace msacode=4790 if (metarea==8840) & (msacode==.)
+(218 real changes made)
+
+. replace msacode=4790 if (metarea==8841) & (msacode==.)
+(2,513 real changes made)
+
+. replace msacode=1074 if (metarea==200) & (msacode==.)
+(68 real changes made)
+
+. replace msacode=3562 if (metarea==5600) & (msacode==.)
+(281 real changes made)
+
+. replace msacode=3562 if (metarea==5601) & (msacode==.)
+(1,471 real changes made)
+
+. replace msacode=1714 if (metarea==1640) & (msacode==.)
+(114 real changes made)
+
+. replace msacode=3798 if (metarea==6160) & (msacode==.)
+(70 real changes made)
+
+. replace msacode=2542 if (metarea==3240) & (msacode==.)
+(77 real changes made)
+
+. 
+. drop _merge metarea
+
+. 
+. * merge Uber entry
+. merge m:1 msacode year using "$root/data/derived/uber_entry_msa_clean.dta"
+(variable msacode was int, now long to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       202,720
+        from master                   202,661  (_merge==1)
+        from using                         59  (_merge==2)
+
+    Matched                            35,404  (_merge==3)
+    -----------------------------------------
+
+. 
+. keep if (_merge==3)|(inlist(metro, 1, 2, 3))
+(43,033 observations deleted)
+
+. drop if msacode == .
+(56,644 observations deleted)
+
+. keep if empstat == 1
+(55,983 observations deleted)
+
+. keep if (age>=16)&(age<=65)
+(4,317 observations deleted)
+
+. keep if (year>=2009)&(year<=2015)
+(50,564 observations deleted)
+
+. keep if travel_work > 0
+(14,278 observations deleted)
+
+. quietly sum travel_work, detail
+
+. keep if travel_work <= `r(p99)'
+(124 observations deleted)
+
+. replace uber = 0 if uber==.
+(3,798 real changes made)
+
+. 
+. label variable food_preparation "Food/drink preparation"
+
+. label variable sleep "Sleep"
+
+. label variable travel_work "Commute"
+
+. 
+. * Clean health indicators
+. replace rested = . if rested == 99
+(425 real changes made, 425 to missing)
+
+. replace rested = 2 if rested <= 2
+(1,728 real changes made)
+
+. replace rested = 1 if rested > 2
+(9,168 real changes made)
+
+. replace highbp = . if highbp == 99
+(425 real changes made, 425 to missing)
+
+. replace painmed = . if painmed == 99
+(425 real changes made, 425 to missing)
+
+. 
+. save "$root/data/derived/commute_cleaned.dta", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/data/derived/commute_cleaned.dta saved
+
+. 
+. * Get how many MSAs have Uber and how many MSAs are in my data
+. preserve
+
+. collapse (max) uber, by(msacode year)
+
+. graph bar (sum) uber, over(year) ytitle("Count of MSAs with Uber")
+
+. graph export "$root/results/uber_entry.png", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/uber_entry.png saved as PNG format
+
+. 
+. collapse (max) uber, by(msacode)
+
+. count if uber == 1
+  42
+
+. yamlout using "$root/results/results.yaml", key(msa_uber) value(`=r(N)') replace
+
+. count
+  206
+
+. yamlout using "$root/results/results.yaml", key(msa_total) value(`=r(N)')
+
+. restore
+
+. 
+. * Get how many observations there are
+. count
+  13,181
+
+. yamlout using "$root/results/results.yaml", key(obs_total) value(`=r(N)')
+
+. count if wb_resp == 1
+  5,291
+
+. yamlout using "$root/results/results.yaml", key(obs_wb_resp) value(`=r(N)')
+
+. 
+end of do-file
+
+. 
+. * Perform the summary, OLs, and IV analysis and generate figures.
+. do "$root/code/analysis.do"
+
+. /*******************************************************************************
+> Title:                  ECO481 Final Paper Data Analysis Script
+> Authors:                Jia Jun (Jacob) Li, 1006824750
+> Date Created:   November 17, 2023
+> Date Updated:   November 17, 2023
+> 
+> Stata Version:  17.0 BE
+> Stata Packages: estout
+>                                 binscatter
+>                                 setroot
+> 
+> *******************************************************************************/
+. setroot
+setroot is searching for the root project path of "/Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health"
+root project path found; setting "global root = /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health" 
+
+. capture mkdir "$root/results"
+
+. 
+. use "$root/data/derived/commute_cleaned.dta", clear
+
+. 
+. * Generate summary statistics.
+. estpost summarize travel_work sleep participate_exercise food_preparation rested highbp painmed
+
+             |  e(count)   e(sum_w)    e(mean)     e(Var)      e(sd)     e(min)     e(max)     e(sum) 
+-------------+----------------------------------------------------------------------------------------
+ travel_work |     13181      13181    45.4643   1308.219   36.16931          1        210     599265 
+       sleep |     13181      13181   467.1186   11697.68   108.1558          0       1230    6157090 
+participat~e |     13181      13181   11.35521   1107.821   33.28395          0        555     149673 
+food_prepa~n |     13181      13181   18.37911   876.4005   29.60406          0        390     242255 
+      rested |     13181      13181   1.304453   .2117776    .460193          1          2      17194 
+      highbp |      5291       5291   1.782083   .1704615   .4128699          1          2       9429 
+     painmed |      5291       5291   1.780949   .1711001   .4136425          1          2       9423 
+
+. 
+. esttab . using "$root/results/sum_stat.tex", ///
+>         cells("mean(fmt(%9.2f)) sd(fmt(%9.2f)) min(fmt(%9.2f)) max(fmt(%9.2f))") ///
+>         label nomtitle nonumber replace
+(output written to /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/sum_stat.tex)
+
+. 
+. * Generate histogram of commute duration
+. hist travel_work
+(bin=41, start=1, width=5.097561)
+
+. graph export "$root/results/hist_travel_work.png", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/hist_travel_work.png saved as PNG format
+
+. 
+. * Generate binned scatterplots between health indicators and commute duration.
+. binscatter rested travel_work, xtitle("Commute duration (minutes)") ytitle("Well-rested status") savegraph("$root/results/binscatter_rested_commute") replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_rested_commute.gph saved
+
+. binscatter highbp travel_work, xtitle("Commute duration (minutes)") ytitle("High blood pressure status") savegraph("$root/results/binscatter_highbp_commute") replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_highbp_commute.gph saved
+
+. binscatter painmed travel_work, xtitle("Commute duration (minutes)") ytitle("Pain medication status") savegraph("$root/results/binscatter_painmed_commute") replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_painmed_commute.gph saved
+
+. 
+. * Generate binned scatterplot between health behaviours and commute duration
+. binscatter sleep travel_work, xtitle("Commute duration (minutes)") ytitle("Sleep duration (minutes)") savegraph("$root/results/binscatter_sleep_commute") replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_sleep_commute.gph saved
+
+. binscatter food_preparation travel_work, xtitle("Commute duration (minutes)") ytitle("Food/drink preparation duration (minutes)") savegraph("$root/results/binscatter_food_prep_commute") replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_food_prep_commute.gph saved
+
+. binscatter participate_exercise travel_work, xtitle("Commute duration (minutes)") ytitle("Exercise duration (minutes)") savegraph("$root/results/binscatter_exercise_commute")replace
+warning: nquantiles(20) was specified, but only 17 were generated. see help file under nquantiles() for explanation.
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_exercise_commute.gph saved
+
+. 
+. graph combine "$root/results/binscatter_rested_commute.gph" "$root/results/binscatter_highbp_commute.gph" "$root/results/binscatter_painmed_commute.gph" "$root/results/binscatter_sleep_commute.gph" "$root/results/binscatter_food_prep_comm
+> ute.gph" "$root/results/binscatter_exercise_commute.gph"
+
+. graph export "$root/results/binscatter_combined.png", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/binscatter_combined.png saved as PNG format
+
+. 
+. * Run and export regressions of health indicators and sleep on commute duration.
+. label variable rested "Well-rested"
+
+. label variable highbp "High BP"
+
+. label variable painmed "Pain med."
+
+. label variable food_preparation "Food prep."
+
+. label variable participate_exercise "Exercise"
+
+. eststo reg_rested: reg rested travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 124,436,376,984)
+
+Linear regression                               Number of obs     =     13,181
+                                                F(65, 13112)      =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.5891
+                                                Root MSE          =     .29459
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+                          rested | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |  -.0000889   .0000889    -1.00   0.318    -.0002632    .0000855
+                        earnweek |  -1.59e-07   1.30e-07    -1.23   0.219    -4.13e-07    9.48e-08
+                                 |
+                        statefip |
+                        Arizona  |  -.0323675   .0271454    -1.19   0.233    -.0855764    .0208415
+                       Arkansas  |    .016339     .03909     0.42   0.676    -.0602831    .0929611
+                     California  |  -.0709049   .0227644    -3.11   0.002    -.1155264   -.0262834
+                       Colorado  |  -.0614302   .0272292    -2.26   0.024    -.1148035   -.0080569
+                    Connecticut  |  -.0709583   .0467668    -1.52   0.129    -.1626281    .0207114
+                       Delaware  |   .0276088    .047131     0.59   0.558    -.0647748    .1199924
+           District of Columbia  |  -.1644592   .0788142    -2.09   0.037    -.3189465   -.0099719
+                        Florida  |  -.0541955   .0235489    -2.30   0.021    -.1003548   -.0080363
+                        Georgia  |  -.0499336   .0331583    -1.51   0.132    -.1149286    .0150614
+                         Hawaii  |  -.0322346   .0556782    -0.58   0.563    -.1413719    .0769026
+                          Idaho  |  -.0527491    .047147    -1.12   0.263    -.1451641    .0396659
+                       Illinois  |  -.0749737   .0253434    -2.96   0.003    -.1246504    -.025297
+                        Indiana  |  -.0624566   .0309816    -2.02   0.044    -.1231849   -.0017282
+                           Iowa  |  -.0657504   .0370071    -1.78   0.076    -.1382896    .0067888
+                         Kansas  |  -.0969927   .0571927    -1.70   0.090    -.2090987    .0151132
+                       Kentucky  |  -.0720554   .0415693    -1.73   0.083    -.1535372    .0094264
+                      Louisiana  |  -.0443124   .0346847    -1.28   0.201    -.1122995    .0236746
+                       Maryland  |  -.0977516   .0288182    -3.39   0.001    -.1542395   -.0412637
+                  Massachusetts  |  -.0350234   .0267663    -1.31   0.191    -.0874893    .0174425
+                       Michigan  |   -.029865   .0256056    -1.17   0.243    -.0800558    .0203258
+                      Minnesota  |  -.0607064   .0270259    -2.25   0.025    -.1136811   -.0077318
+                       Missouri  |  -.0750386   .0390997    -1.92   0.055    -.1516797    .0016025
+                        Montana  |   -.208892   .1451151    -1.44   0.150    -.4933386    .0755546
+                       Nebraska  |  -.0329332   .0400365    -0.82   0.411    -.1114105    .0455441
+                         Nevada  |   -.033878   .0305446    -1.11   0.267    -.0937498    .0259937
+                  New Hampshire  |  -.0429416   .0528065    -0.81   0.416    -.1464501    .0605668
+                     New Jersey  |   -.073421    .027344    -2.69   0.007    -.1270193   -.0198227
+                     New Mexico  |  -.0500201    .031221    -1.60   0.109    -.1112177    .0111776
+                       New York  |  -.0786096   .0245363    -3.20   0.001    -.1267043   -.0305148
+                 North Carolina  |  -.0351858   .0272286    -1.29   0.196    -.0885579    .0181862
+                   North Dakota  |  -.0651482   .0543029    -1.20   0.230    -.1715898    .0412934
+                           Ohio  |  -.0320606   .0270182    -1.19   0.235    -.0850202     .020899
+                       Oklahoma  |  -.1055937   .1264023    -0.84   0.404    -.3533606    .1421732
+                         Oregon  |   -.059124   .0525475    -1.13   0.261    -.1621248    .0438768
+                   Pennsylvania  |  -.0540151   .0245051    -2.20   0.028    -.1020487   -.0059815
+                   Rhode Island  |  -.0592197   .0213411    -2.77   0.006    -.1010514    -.017388
+                 South Carolina  |  -.0452008   .0360486    -1.25   0.210    -.1158613    .0254596
+                      Tennessee  |   -.012021   .0412019    -0.29   0.770    -.0927827    .0687406
+                          Texas  |  -.0450095   .0268887    -1.67   0.094    -.0977153    .0076963
+                           Utah  |   -.094233   .0345894    -2.72   0.006    -.1620332   -.0264329
+                       Virginia  |  -.0490249   .0261153    -1.88   0.061    -.1002147    .0021649
+                     Washington  |  -.0479347   .0280817    -1.71   0.088    -.1029788    .0071094
+                  West Virginia  |  -.0636509   .0212493    -3.00   0.003    -.1053027   -.0219992
+                      Wisconsin  |  -.0964633   .0302431    -3.19   0.001    -.1557441   -.0371825
+                                 |
+                            race |
+                     Black only  |  -.0161315   .0098089    -1.64   0.100    -.0353584    .0030954
+American Indian, Alaskan Native  |  -.0271028   .0552022    -0.49   0.623    -.1353071    .0811016
+                     Asian only  |  -.0142012   .0145213    -0.98   0.328     -.042665    .0142626
+ Hawaiian Pacific Islander only  |   .0344393   .0299608     1.15   0.250    -.0242882    .0931668
+                    White-Black  |   .0314771   .0409848     0.77   0.442     -.048859    .1118131
+          White-American Indian  |   .0078507   .0436841     0.18   0.857    -.0777764    .0934778
+                    White-Asian  |   -.002842   .0531862    -0.05   0.957    -.1070946    .1014106
+                 White-Hawaiian  |  -.2548212   .1720466    -1.48   0.139    -.5920575    .0824152
+          Black-American Indian  |   .0340225   .1045535     0.33   0.745    -.1709175    .2389625
+                    Black-Asian  |  -.3386313   .2301904    -1.47   0.141    -.7898379    .1125753
+                 Black-Hawaiian  |  -.7416263   .0535351   -13.85   0.000    -.8465628   -.6366897
+          American Indian-Asian  |   .2790128   .0212409    13.14   0.000     .2373776     .320648
+                 Asian-Hawaiian  |   .2682216   .0200727    13.36   0.000     .2288763     .307567
+    White-Black-American Indian  |    .156066   .0624206     2.50   0.012     .0337126    .2784194
+           White-Asian-Hawaiian  |  -.0273268    .051989    -0.53   0.599    -.1292327    .0745791
+                                 |
+                            year |
+                           2010  |   .7140791   .0128109    55.74   0.000     .6889679    .7391902
+                           2011  |  -.0004478   .0013264    -0.34   0.736    -.0030477    .0021521
+                           2012  |   .7072906     .01352    52.31   0.000     .6807894    .7337918
+                           2013  |   .7102622   .0136831    51.91   0.000     .6834413    .7370831
+                           2014  |  -.0000952   .0014066    -0.07   0.946    -.0028524     .002662
+                           2015  |  -.0009551   .0014836    -0.64   0.520    -.0038632    .0019529
+                                 |
+                         educyrs |   .0000375   .0000444     0.85   0.398    -.0000494    .0001245
+                           _cons |   1.060397   .0226635    46.79   0.000     1.015973     1.10482
+--------------------------------------------------------------------------------------------------
+
+. eststo reg_highbp: reg highbp travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 48,562,498,689.33)
+
+Linear regression                               Number of obs     =      5,291
+                                                F(58, 5230)       =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.0253
+                                                Root MSE          =     .40561
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+                          highbp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |  -.0006818   .0002051    -3.32   0.001    -.0010838   -.0002798
+                        earnweek |   9.45e-08   2.37e-07     0.40   0.690    -3.71e-07    5.60e-07
+                                 |
+                        statefip |
+                        Arizona  |   .0430058   .0795731     0.54   0.589    -.1129908    .1990024
+                       Arkansas  |  -.0948139   .1598551    -0.59   0.553    -.4081967     .218569
+                     California  |   .0800927   .0688725     1.16   0.245    -.0549262    .2151116
+                       Colorado  |    .064206   .0793515     0.81   0.418    -.0913562    .2197682
+                    Connecticut  |   .0806994   .1002727     0.80   0.421    -.1158769    .2772757
+                       Delaware  |  -.0375197   .1340946    -0.28   0.780    -.3004011    .2253617
+           District of Columbia  |  -.0175507   .1280938    -0.14   0.891    -.2686681    .2335668
+                        Florida  |   .0036521   .0724277     0.05   0.960    -.1383364    .1456406
+                        Georgia  |  -.0050511   .0971289    -0.05   0.959    -.1954642     .185362
+                         Hawaii  |   .1426751   .0954146     1.50   0.135    -.0443773    .3297276
+                          Idaho  |    -.05502   .2986922    -0.18   0.854    -.6405815    .5305415
+                       Illinois  |   .1060685   .0712617     1.49   0.137    -.0336342    .2457711
+                        Indiana  |  -.1019261   .0909491    -1.12   0.262    -.2802243    .0763722
+                           Iowa  |   .0709636   .1087906     0.65   0.514    -.1423114    .2842385
+                         Kansas  |   -.075453   .1870793    -0.40   0.687    -.4422066    .2913006
+                       Kentucky  |   .0782118   .0932157     0.84   0.401      -.10453    .2609536
+                      Louisiana  |  -.0142308   .0979923    -0.15   0.885    -.2063367    .1778751
+                       Maryland  |   .0733026   .0749505     0.98   0.328    -.0736317    .2202369
+                  Massachusetts  |  -.0198839   .0841176    -0.24   0.813    -.1847895    .1450217
+                       Michigan  |   .0516552   .0757613     0.68   0.495    -.0968686    .2001789
+                      Minnesota  |   .0798692   .0784027     1.02   0.308    -.0738328    .2335711
+                       Missouri  |   .1156476   .0819265     1.41   0.158    -.0449625    .2762577
+                        Montana  |   .0701678   .1755024     0.40   0.689    -.2738901    .4142258
+                       Nebraska  |  -.1060047   .2342275    -0.45   0.651    -.5651885     .353179
+                         Nevada  |  -.0605102   .1000694    -0.60   0.545    -.2566881    .1356676
+                  New Hampshire  |   -.097217   .1464291    -0.66   0.507    -.3842792    .1898453
+                     New Jersey  |   .0408849   .0744827     0.55   0.583    -.1051324    .1869022
+                     New Mexico  |   -.090887   .1064552    -0.85   0.393    -.2995837    .1178097
+                       New York  |   .0532753   .0731404     0.73   0.466    -.0901104    .1966611
+                 North Carolina  |   .0024327   .0832579     0.03   0.977    -.1607877     .165653
+                   North Dakota  |   .2334152   .0680575     3.43   0.001     .0999941    .3668363
+                           Ohio  |   .0435281   .0764999     0.57   0.569    -.1064436    .1934998
+                       Oklahoma  |  -.2271453   .2730421    -0.83   0.406    -.7624219    .3081313
+                         Oregon  |    .216198   .0685615     3.15   0.002     .0817888    .3506073
+                   Pennsylvania  |   .0545743   .0736695     0.74   0.459    -.0898486    .1989973
+                 South Carolina  |  -.0140757   .0902101    -0.16   0.876    -.1909251    .1627738
+                      Tennessee  |  -.0670639   .1225415    -0.55   0.584    -.3072965    .1731687
+                          Texas  |  -.0125079    .078286    -0.16   0.873    -.1659811    .1409654
+                           Utah  |   .0129891   .0882673     0.15   0.883    -.1600518      .18603
+                       Virginia  |   .0227215   .0768645     0.30   0.768     -.127965     .173408
+                     Washington  |  -.0419165   .0780796    -0.54   0.591    -.1949851    .1111522
+                      Wisconsin  |   .0204402   .0809275     0.25   0.801    -.1382115    .1790919
+                                 |
+                            race |
+                     Black only  |  -.0666691   .0218017    -3.06   0.002    -.1094095   -.0239286
+American Indian, Alaskan Native  |   .1162232   .0411873     2.82   0.005     .0354789    .1969675
+                     Asian only  |  -.0041415     .03142    -0.13   0.895    -.0657377    .0574548
+ Hawaiian Pacific Islander only  |   .1485288    .052062     2.85   0.004     .0464656    .2505921
+                    White-Black  |   .0347937   .0947724     0.37   0.714    -.1509998    .2205872
+          White-American Indian  |   .0006481   .1086645     0.01   0.995    -.2123797    .2136759
+                    White-Asian  |   .1430517   .0458963     3.12   0.002     .0530758    .2330275
+                 White-Hawaiian  |   .1631395   .0216005     7.55   0.000     .1207935    .2054856
+          Black-American Indian  |   .1742573   .0254787     6.84   0.000     .1243084    .2242063
+                 Black-Hawaiian  |   .1034055   .0701395     1.47   0.140    -.0340972    .2409083
+          American Indian-Asian  |  -.7048179   .0432773   -16.29   0.000    -.7896594   -.6199764
+                 Asian-Hawaiian  |   .1341211   .0387615     3.46   0.001     .0581323    .2101099
+    White-Black-American Indian  |   .1461441   .1022819     1.43   0.153    -.0543712    .3466594
+                                 |
+                            year |
+                           2012  |  -.0223182   .0171365    -1.30   0.193    -.0559129    .0112765
+                           2013  |  -.0128044   .0165626    -0.77   0.440    -.0452741    .0196653
+                                 |
+                         educyrs |   .0001601    .000091     1.76   0.079    -.0000184    .0003385
+                           _cons |   1.765964   .0708299    24.93   0.000     1.627107     1.90482
+--------------------------------------------------------------------------------------------------
+
+. eststo reg_painmed: reg painmed travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 48,562,498,689.33)
+
+Linear regression                               Number of obs     =      5,291
+                                                F(58, 5230)       =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.0248
+                                                Root MSE          =     .40676
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+                         painmed | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |  -.0002357    .000207    -1.14   0.255    -.0006416    .0001702
+                        earnweek |   2.66e-08   2.42e-07     0.11   0.912    -4.49e-07    5.02e-07
+                                 |
+                        statefip |
+                        Arizona  |   .0361575   .0784173     0.46   0.645    -.1175732    .1898881
+                       Arkansas  |  -.0545368   .1513971    -0.36   0.719    -.3513385    .2422648
+                     California  |   .0342407   .0682632     0.50   0.616    -.0995836     .168065
+                       Colorado  |  -.0100601    .081307    -0.12   0.902    -.1694558    .1493356
+                    Connecticut  |   .0824463   .0853493     0.97   0.334    -.0848741    .2497666
+                       Delaware  |    -.01215   .1324551    -0.09   0.927    -.2718174    .2475174
+           District of Columbia  |  -.0735754   .1655946    -0.44   0.657    -.3982099    .2510591
+                        Florida  |  -.0211514   .0716467    -0.30   0.768    -.1616087     .119306
+                        Georgia  |   .0312913   .0866967     0.36   0.718    -.1386705    .2012531
+                         Hawaii  |   .0404031   .0913748     0.44   0.658    -.1387296    .2195359
+                          Idaho  |  -.0750796   .3109545    -0.24   0.809    -.6846803     .534521
+                       Illinois  |  -.0542135   .0753641    -0.72   0.472    -.2019586    .0935315
+                        Indiana  |   .0359916   .0824019     0.44   0.662    -.1255505    .1975338
+                           Iowa  |   .0014004   .1083952     0.01   0.990    -.2110994    .2139003
+                         Kansas  |  -.1413397   .1740007    -0.81   0.417    -.4824539    .1997744
+                       Kentucky  |   .1501049   .0768438     1.95   0.051    -.0005411    .3007509
+                      Louisiana  |   .0060137    .089385     0.07   0.946    -.1692183    .1812457
+                       Maryland  |    .039251   .0736972     0.53   0.594    -.1052263    .1837284
+                  Massachusetts  |  -.0713307   .0824082    -0.87   0.387    -.2328853    .0902239
+                       Michigan  |   .0224689    .077222     0.29   0.771    -.1289186    .1738563
+                      Minnesota  |  -.0367249   .0814451    -0.45   0.652    -.1963913    .1229415
+                       Missouri  |  -.0333239   .0920593    -0.36   0.717    -.2137985    .1471507
+                        Montana  |  -.4387518   .2150682    -2.04   0.041    -.8603752   -.0171283
+                       Nebraska  |  -.4686862    .212198    -2.21   0.027    -.8846828   -.0526896
+                         Nevada  |   .0102065   .0962495     0.11   0.916    -.1784827    .1988957
+                  New Hampshire  |   .0273281   .1090139     0.25   0.802    -.1863847    .2410409
+                     New Jersey  |   .0275679   .0750864     0.37   0.714    -.1196328    .1747687
+                     New Mexico  |  -.1428339   .1074922    -1.33   0.184    -.3535635    .0678958
+                       New York  |   .0431195   .0707492     0.61   0.542    -.0955785    .1818174
+                 North Carolina  |    .108721   .0726557     1.50   0.135    -.0337144    .2511565
+                   North Dakota  |   .0342086   .1312708     0.26   0.794     -.223137    .2915542
+                           Ohio  |   .0470489   .0746223     0.63   0.528    -.0992419    .1933397
+                       Oklahoma  |  -.5140486   .2022982    -2.54   0.011    -.9106377   -.1174596
+                         Oregon  |   .0619607   .0981343     0.63   0.528    -.1304235    .2543448
+                   Pennsylvania  |   .0304114   .0723201     0.42   0.674    -.1113663    .1721891
+                 South Carolina  |   .0824371   .0794915     1.04   0.300    -.0733994    .2382736
+                      Tennessee  |   .0669593   .1015835     0.66   0.510    -.1321868    .2661055
+                          Texas  |   .0154684   .0738532     0.21   0.834    -.1293146    .1602514
+                           Utah  |   .0232482    .093707     0.25   0.804    -.1604568    .2069531
+                       Virginia  |  -.0239053   .0758489    -0.32   0.753    -.1726009    .1247903
+                     Washington  |  -.0572857   .0773243    -0.74   0.459    -.2088736    .0943022
+                      Wisconsin  |  -.0340117   .0821909    -0.41   0.679    -.1951402    .1271169
+                                 |
+                            race |
+                     Black only  |   .0043782   .0219747     0.20   0.842    -.0387015    .0474579
+American Indian, Alaskan Native  |   .1354649   .0420745     3.22   0.001     .0529813    .2179485
+                     Asian only  |   .1092716   .0269402     4.06   0.000     .0564576    .1620856
+ Hawaiian Pacific Islander only  |    .118276   .0814965     1.45   0.147    -.0414912    .2780433
+                    White-Black  |  -.0792056   .1292928    -0.61   0.540    -.3326734    .1742622
+          White-American Indian  |   .1403243   .0544287     2.58   0.010     .0336213    .2470274
+                    White-Asian  |   .2154172   .0398939     5.40   0.000     .1372085    .2936259
+                 White-Hawaiian  |  -.8120662   .0185023   -43.89   0.000    -.8483383    -.775794
+          Black-American Indian  |  -.2883011   .2983847    -0.97   0.334    -.8732598    .2966575
+                 Black-Hawaiian  |   .1929999   .0654666     2.95   0.003     .0646581    .3213417
+          American Indian-Asian  |   .2414372   .0361249     6.68   0.000     .1706173    .3122571
+                 Asian-Hawaiian  |   .1899949   .0290926     6.53   0.000     .1329613    .2470285
+    White-Black-American Indian  |   .1940034   .0277452     6.99   0.000     .1396112    .2483956
+                                 |
+                            year |
+                           2012  |  -.0424876   .0170295    -2.49   0.013    -.0758726   -.0091026
+                           2013  |  -.0162212   .0169383    -0.96   0.338    -.0494273     .016985
+                                 |
+                         educyrs |  -.0000611   .0000952    -0.64   0.521    -.0002477    .0001255
+                           _cons |    1.80773   .0699834    25.83   0.000     1.670533    1.944927
+--------------------------------------------------------------------------------------------------
+
+. eststo reg_sleep: reg sleep travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 124,436,376,984)
+
+Linear regression                               Number of obs     =     13,181
+                                                F(66, 13112)      =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.0310
+                                                Root MSE          =     104.54
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+                           sleep | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |  -.2702453   .0331416    -8.15   0.000    -.3352076   -.2052829
+                        earnweek |   .0000757   .0000498     1.52   0.128    -.0000219    .0001732
+                                 |
+                        statefip |
+                        Arizona  |   11.33363   11.69261     0.97   0.332    -11.58558    34.25283
+                       Arkansas  |   -6.48446   20.66025    -0.31   0.754    -46.98154    34.01262
+                     California  |   9.447485   10.02059     0.94   0.346    -10.19432    29.08929
+                       Colorado  |  -3.277166   12.27151    -0.27   0.789     -27.3311    20.77676
+                    Connecticut  |   5.651814   16.47705     0.34   0.732    -26.64559    37.94922
+                       Delaware  |   11.74362   19.58212     0.60   0.549    -26.64018    50.12742
+           District of Columbia  |  -7.530053   17.33225    -0.43   0.664    -41.50377    26.44366
+                        Florida  |   3.798507   10.38043     0.37   0.714    -16.54864    24.14566
+                        Georgia  |   8.858271   16.87855     0.52   0.600    -24.22614    41.94268
+                         Hawaii  |  -45.15557   17.78675    -2.54   0.011    -80.02017   -10.29096
+                          Idaho  |   60.07984   27.88015     2.15   0.031     5.430708     114.729
+                       Illinois  |   1.429909    11.1389     0.13   0.898    -20.40395    23.26377
+                        Indiana  |   10.97651   13.94412     0.79   0.431    -16.35598      38.309
+                           Iowa  |   14.07076   12.89934     1.09   0.275    -11.21382    39.35534
+                         Kansas  |   39.73257   21.75457     1.83   0.068    -2.909542    82.37468
+                       Kentucky  |  -3.067193   16.88647    -0.18   0.856    -36.16711    30.03273
+                      Louisiana  |   16.72615   16.70063     1.00   0.317     -16.0095    49.46181
+                       Maryland  |  -5.466646   11.79374    -0.46   0.643    -28.58408    17.65079
+                  Massachusetts  |   9.205035   12.39657     0.74   0.458    -15.09403    33.50411
+                       Michigan  |   -6.19476   10.72392    -0.58   0.564     -27.2152    14.82568
+                      Minnesota  |   11.21603   11.65899     0.96   0.336    -11.63728    34.06934
+                       Missouri  |   10.84479    14.1038     0.77   0.442    -16.80071    38.49029
+                        Montana  |   -24.8029   61.86044    -0.40   0.688    -146.0583    96.45254
+                       Nebraska  |  -25.52599   18.42102    -1.39   0.166    -61.63385    10.58187
+                         Nevada  |   8.661964   15.12066     0.57   0.567    -20.97672    38.30065
+                  New Hampshire  |  -13.48148   17.44344    -0.77   0.440    -47.67315    20.71018
+                     New Jersey  |   1.754221   10.68307     0.16   0.870    -19.18614    22.69458
+                     New Mexico  |   7.371895    13.8502     0.53   0.595    -19.77651     34.5203
+                       New York  |  -7.598817   10.89017    -0.70   0.485    -28.94512    13.74749
+                 North Carolina  |  -2.033912   11.34218    -0.18   0.858    -24.26624    20.19841
+                   North Dakota  |   6.322469   18.36458     0.34   0.731    -29.67476     42.3197
+                           Ohio  |  -3.680533   11.67766    -0.32   0.753    -26.57044    19.20937
+                       Oklahoma  |   45.15553   23.09326     1.96   0.051    -.1106072    90.42167
+                         Oregon  |   5.183249   16.15548     0.32   0.748    -26.48383    36.85032
+                   Pennsylvania  |  -10.46085   10.90483    -0.96   0.337    -31.83589    10.91419
+                   Rhode Island  |   55.25205    10.1486     5.44   0.000     35.35933    75.14477
+                 South Carolina  |  -3.583347   12.87673    -0.28   0.781    -28.82361    21.65692
+                      Tennessee  |  -4.369395   21.27582    -0.21   0.837    -46.07308    37.33429
+                          Texas  |   4.078141   10.98589     0.37   0.710    -17.45579    25.61207
+                           Utah  |  -11.45893   13.47038    -0.85   0.395    -37.86282    14.94497
+                       Virginia  |  -.0739695   11.01843    -0.01   0.995     -21.6717    21.52376
+                     Washington  |   4.155885   11.28776     0.37   0.713    -17.96977    26.28154
+                  West Virginia  |  -35.26633   12.26556    -2.88   0.004    -59.30861   -11.22405
+                      Wisconsin  |  -8.301876   11.55287    -0.72   0.472    -30.94717    14.34342
+                                 |
+                            race |
+                     Black only  |   -4.94182   4.403566    -1.12   0.262    -13.57345    3.689809
+American Indian, Alaskan Native  |  -14.51873    13.0601    -1.11   0.266    -40.11843    11.08096
+                     Asian only  |   8.941456   4.591564     1.95   0.052    -.0586747    17.94159
+ Hawaiian Pacific Islander only  |   37.41001   16.06753     2.33   0.020     5.915331    68.90469
+                    White-Black  |   15.33008   22.18224     0.69   0.490    -28.15033    58.81048
+          White-American Indian  |  -8.117562   17.56291    -0.46   0.644    -42.54341    26.30828
+                    White-Asian  |  -11.42562   22.05949    -0.52   0.605    -54.66542    31.81417
+                 White-Hawaiian  |    38.0154    17.4671     2.18   0.030     3.777352    72.25344
+          Black-American Indian  |    17.1834   27.37957     0.63   0.530    -36.48453    70.85132
+                    Black-Asian  |  -17.36093   8.623168    -2.01   0.044    -34.26359   -.4582728
+                 Black-Hawaiian  |  -42.06852   15.33261    -2.74   0.006    -72.12266   -12.01437
+          American Indian-Asian  |   34.84528   6.246274     5.58   0.000     22.60168    47.08888
+                 Asian-Hawaiian  |   34.01028   62.89177     0.54   0.589    -89.26671    157.2873
+    White-Black-American Indian  |   7.942005   61.50963     0.13   0.897    -112.6258    128.5098
+           White-Asian-Hawaiian  |   339.5197   57.88129     5.87   0.000      226.064    452.9755
+                                 |
+                            year |
+                           2010  |  -4.538027   4.618403    -0.98   0.326    -13.59077    4.514711
+                           2011  |   3.245095   4.517944     0.72   0.473     -5.61073    12.10092
+                           2012  |   2.106032   4.387314     0.48   0.631    -6.493739     10.7058
+                           2013  |   9.058521   4.505392     2.01   0.044        .2273    17.88974
+                           2014  |   10.39734   4.642625     2.24   0.025     1.297121    19.49756
+                           2015  |   8.959907   4.656863     1.92   0.054    -.1682191    18.08803
+                                 |
+                         educyrs |   -.144436   .0154592    -9.34   0.000    -.1747384   -.1141336
+                           _cons |   502.6577   10.60061    47.42   0.000      481.879    523.4364
+--------------------------------------------------------------------------------------------------
+
+. eststo reg_food_prep: reg food_preparation travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 124,436,376,984)
+
+Linear regression                               Number of obs     =     13,181
+                                                F(65, 13112)      =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.0173
+                                                Root MSE          =     28.871
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+                food_preparation | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |    -.03949   .0078597    -5.02   0.000    -.0548962   -.0240839
+                        earnweek |  -8.30e-06   .0000116    -0.71   0.475     -.000031    .0000145
+                                 |
+                        statefip |
+                        Arizona  |  -1.342109   3.265721    -0.41   0.681    -7.743394    5.059177
+                       Arkansas  |   5.292807   7.826096     0.68   0.499    -10.04748    20.63309
+                     California  |   .8188609   2.802361     0.29   0.770    -4.674174    6.311895
+                       Colorado  |   1.337312   3.252285     0.41   0.681    -5.037639    7.712262
+                    Connecticut  |     7.5532    4.43364     1.70   0.088    -1.137377    16.24378
+                       Delaware  |  -1.858356   4.602577    -0.40   0.686    -10.88007    7.163362
+           District of Columbia  |   .3615025   5.694163     0.06   0.949    -10.79988    11.52289
+                        Florida  |   .9797343   2.930889     0.33   0.738    -4.765233    6.724701
+                        Georgia  |  -2.926767   3.368723    -0.87   0.385    -9.529951    3.676418
+                         Hawaii  |  -1.754905   5.246499    -0.33   0.738     -12.0388    8.528994
+                          Idaho  |   21.21166   12.77635     1.66   0.097    -3.831842    46.25517
+                       Illinois  |  -.7810214   3.033178    -0.26   0.797    -6.726491    5.164448
+                        Indiana  |  -2.957323   3.223642    -0.92   0.359    -9.276128    3.361482
+                           Iowa  |  -.0269735   4.468815    -0.01   0.995    -8.786499    8.732552
+                         Kansas  |   7.676212   9.197983     0.83   0.404    -10.35317    25.70559
+                       Kentucky  |  -5.408288   3.371884    -1.60   0.109    -12.01767    1.201093
+                      Louisiana  |  -3.904141   3.411715    -1.14   0.253     -10.5916    2.783316
+                       Maryland  |   -.090744   3.103345    -0.03   0.977    -6.173749    5.992261
+                  Massachusetts  |   .4629217    3.32884     0.14   0.889    -6.062088    6.987931
+                       Michigan  |  -1.098729   3.098815    -0.35   0.723    -7.172856    4.975399
+                      Minnesota  |  -.8702927   3.354936    -0.26   0.795    -7.446454    5.705868
+                       Missouri  |  -3.554438   3.547724    -1.00   0.316    -10.50849    3.399615
+                        Montana  |   7.214472   8.007999     0.90   0.368    -8.482367    22.91131
+                       Nebraska  |    29.1024   19.06067     1.53   0.127    -8.259278    66.46408
+                         Nevada  |  -4.920447   3.762688    -1.31   0.191    -12.29586    2.454967
+                  New Hampshire  |   9.370871   5.600192     1.67   0.094    -1.606316    20.34806
+                     New Jersey  |   1.071064   3.031176     0.35   0.724     -4.87048    7.012608
+                     New Mexico  |   6.102316   5.273676     1.16   0.247    -4.234854    16.43949
+                       New York  |    .424025   2.981628     0.14   0.887    -5.420398    6.268448
+                 North Carolina  |   1.997106   3.444719     0.58   0.562    -4.755043    8.749255
+                   North Dakota  |   10.72211    7.30678     1.47   0.142    -3.600235    25.04446
+                           Ohio  |  -1.435498   3.047972    -0.47   0.638    -7.409966     4.53897
+                       Oklahoma  |  -3.641839   6.822225    -0.53   0.593    -17.01439     9.73071
+                         Oregon  |   3.578602   4.398577     0.81   0.416    -5.043247    12.20045
+                   Pennsylvania  |   .9091188    3.04429     0.30   0.765     -5.05813    6.876367
+                   Rhode Island  |  -20.12564   2.865834    -7.02   0.000    -25.74309   -14.50819
+                 South Carolina  |   3.918886   3.829648     1.02   0.306     -3.58778    11.42555
+                      Tennessee  |  -8.524909   3.395989    -2.51   0.012    -15.18154   -1.868279
+                          Texas  |   1.002305   3.229294     0.31   0.756    -5.327579     7.33219
+                           Utah  |  -5.361308    3.08703    -1.74   0.082    -11.41233    .6897194
+                       Virginia  |  -2.385697   2.953289    -0.81   0.419    -8.174571    3.403177
+                     Washington  |  -.3726031   3.057135    -0.12   0.903    -6.365031    5.619825
+                  West Virginia  |  -13.41149   9.221753    -1.45   0.146    -31.48746    4.664484
+                      Wisconsin  |   .2385438   3.311401     0.07   0.943    -6.252282    6.729369
+                                 |
+                            race |
+                     Black only  |   .0385949   .9410156     0.04   0.967    -1.805932    1.883122
+American Indian, Alaskan Native  |  -.0692449   3.304798    -0.02   0.983    -6.547127    6.408637
+                     Asian only  |   9.164659    1.72748     5.31   0.000     5.778547    12.55077
+ Hawaiian Pacific Islander only  |   -.744986   4.681683    -0.16   0.874    -9.921764    8.431792
+                    White-Black  |  -1.635622    4.40096    -0.37   0.710    -10.26214    6.990897
+          White-American Indian  |  -2.254227   2.984928    -0.76   0.450    -8.105119    3.596665
+                    White-Asian  |  -.8670509   7.786911    -0.11   0.911    -16.13053    14.39642
+                 White-Hawaiian  |  -8.238973    5.62573    -1.46   0.143    -19.26622    2.788273
+          Black-American Indian  |  -9.398664   5.924633    -1.59   0.113     -21.0118    2.214475
+                    Black-Asian  |  -14.66192   1.962362    -7.47   0.000    -18.50843   -10.81541
+                 Black-Hawaiian  |  -15.39459   4.602376    -3.34   0.001    -24.41591   -6.373264
+          American Indian-Asian  |   11.80842   2.026594     5.83   0.000     7.836001    15.78084
+                 Asian-Hawaiian  |  -2.346715   9.856341    -0.24   0.812    -21.66657    16.97314
+    White-Black-American Indian  |   -8.15033   5.738668    -1.42   0.156    -19.39895     3.09829
+           White-Asian-Hawaiian  |  -2.483733   5.559571    -0.45   0.655     -13.3813    8.413831
+                                 |
+                            year |
+                           2010  |   .4949363   1.183721     0.42   0.676    -1.825329    2.815202
+                           2011  |  -.7175592   1.091211    -0.66   0.511    -2.856491    1.421372
+                           2012  |  -.2463609   1.126617    -0.22   0.827    -2.454693    1.961972
+                           2013  |   .8763388   1.143661     0.77   0.444    -1.365402    3.118079
+                           2014  |   .5059356   1.115553     0.45   0.650     -1.68071    2.692581
+                           2015  |   1.729702   1.146245     1.51   0.131    -.5171034    3.976508
+                                 |
+                         educyrs |  -.0167019    .004211    -3.97   0.000    -.0249561   -.0084477
+                           _cons |   21.87919    2.88331     7.59   0.000     16.22749     27.5309
+--------------------------------------------------------------------------------------------------
+
+. eststo reg_exercise: reg participate_exercise travel_work earnweek i.statefip i.race i.year educyrs [pw=wt06], vce(robust)
+(sum of wgt is 124,436,376,984)
+
+Linear regression                               Number of obs     =     13,181
+                                                F(66, 13112)      =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.0174
+                                                Root MSE          =     34.152
+
+--------------------------------------------------------------------------------------------------
+                                 |               Robust
+            participate_exercise | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------------+----------------------------------------------------------------
+                     travel_work |   -.055584   .0101927    -5.45   0.000    -.0755633   -.0356048
+                        earnweek |   .0000266   .0000157     1.70   0.089    -4.11e-06    .0000574
+                                 |
+                        statefip |
+                        Arizona  |  -4.326622   5.901352    -0.73   0.463    -15.89413    7.240884
+                       Arkansas  |  -11.17637   6.344325    -1.76   0.078    -23.61217    1.259429
+                     California  |  -2.786628   5.634664    -0.49   0.621    -13.83138    8.258129
+                       Colorado  |  -2.825702   5.884646    -0.48   0.631    -14.36046    8.709057
+                    Connecticut  |  -5.963326   6.174666    -0.97   0.334    -18.06657    6.139913
+                       Delaware  |  -6.822353   6.361306    -1.07   0.284    -19.29143     5.64673
+           District of Columbia  |   -10.9348   5.968659    -1.83   0.067    -22.63424    .7646349
+                        Florida  |  -4.963914   5.711918    -0.87   0.385     -16.1601    6.232272
+                        Georgia  |  -7.182181   5.937993    -1.21   0.226    -18.82151    4.457147
+                         Hawaii  |   .5776223   7.987466     0.07   0.942    -15.07897    16.23421
+                          Idaho  |  -15.00852   5.747995    -2.61   0.009    -26.27542   -3.741616
+                       Illinois  |  -.0332662   6.267432    -0.01   0.996    -12.31834    12.25181
+                        Indiana  |   -10.0408   5.783451    -1.74   0.083     -21.3772    1.295604
+                           Iowa  |   -10.3498   6.038205    -1.71   0.087    -22.18556    1.485958
+                         Kansas  |  -9.286398   6.791193    -1.37   0.172    -22.59812    4.025325
+                       Kentucky  |  -3.809615   6.719798    -0.57   0.571    -16.98139    9.362162
+                      Louisiana  |  -6.102875   6.696962    -0.91   0.362    -19.22989    7.024142
+                       Maryland  |  -5.341611    5.73725    -0.93   0.352    -16.58745     5.90423
+                  Massachusetts  |   -4.22015   5.874817    -0.72   0.473    -15.73564    7.295343
+                       Michigan  |   -3.81249   5.829038    -0.65   0.513    -15.23825     7.61327
+                      Minnesota  |  -3.118603   6.085018    -0.51   0.608    -15.04612    8.808915
+                       Missouri  |  -2.169874   6.912318    -0.31   0.754    -15.71902    11.37927
+                        Montana  |  -14.12642   6.037115    -2.34   0.019    -25.96004   -2.292797
+                       Nebraska  |  -7.394362   7.712654    -0.96   0.338    -22.51228    7.723557
+                         Nevada  |  -4.575562   6.275101    -0.73   0.466    -16.87567    7.724545
+                  New Hampshire  |  -11.68417   6.013692    -1.94   0.052    -23.47188    .1035336
+                     New Jersey  |  -6.317213   5.740748    -1.10   0.271    -17.56991    4.935485
+                     New Mexico  |  -5.043068   6.393956    -0.79   0.430    -17.57615    7.490014
+                       New York  |   -4.10781   5.694712    -0.72   0.471    -15.27027     7.05465
+                 North Carolina  |   -5.59275   5.922741    -0.94   0.345    -17.20218     6.01668
+                   North Dakota  |  -9.395234   8.639212    -1.09   0.277    -26.32934    7.538874
+                           Ohio  |  -6.002784   5.957696    -1.01   0.314    -17.68073    5.675164
+                       Oklahoma  |   -9.56107   7.971766    -1.20   0.230    -25.18689    6.064747
+                         Oregon  |  -2.731841   8.135356    -0.34   0.737    -18.67832    13.21464
+                   Pennsylvania  |  -4.980672   5.909188    -0.84   0.399    -16.56354    6.602192
+                   Rhode Island  |  -14.09763    5.69882    -2.47   0.013    -25.26815   -2.927117
+                 South Carolina  |  -3.987021   6.499984    -0.61   0.540    -16.72793    8.753889
+                      Tennessee  |  -2.100414   8.317487    -0.25   0.801    -18.40389    14.20307
+                          Texas  |  -7.774005   5.775812    -1.35   0.178    -19.09543    3.547423
+                           Utah  |   2.064204   6.731609     0.31   0.759    -11.13072    15.25913
+                       Virginia  |  -1.037125   6.019462    -0.17   0.863    -12.83614    10.76189
+                     Washington  |  -2.422315   7.215331    -0.34   0.737    -16.56541    11.72078
+                  West Virginia  |  -17.54035   5.952124    -2.95   0.003    -29.20737   -5.873323
+                      Wisconsin  |  -2.806091   6.075873    -0.46   0.644    -14.71568      9.1035
+                                 |
+                            race |
+                     Black only  |  -3.617253   .9656521    -3.75   0.000    -5.510071   -1.724435
+American Indian, Alaskan Native  |   -2.12127    4.55915    -0.47   0.642    -11.05787    6.815325
+                     Asian only  |  -2.145047   1.469445    -1.46   0.144    -5.025372    .7352775
+ Hawaiian Pacific Islander only  |  -.0233176   5.829775    -0.00   0.997    -11.45052    11.40389
+                    White-Black  |     12.891   6.990922     1.84   0.065    -.8122201    26.59422
+          White-American Indian  |   11.14658   8.754159     1.27   0.203    -6.012837    28.30601
+                    White-Asian  |   1.337712   9.861617     0.14   0.892    -17.99249    20.66791
+                 White-Hawaiian  |  -7.286443   9.163278    -0.80   0.427     -25.2478    10.67491
+          Black-American Indian  |   3.303033   12.03944     0.27   0.784    -20.29602    26.90209
+                    Black-Asian  |   6.851449   6.164825     1.11   0.266    -5.232502     18.9354
+                 Black-Hawaiian  |  -16.98862   5.872719    -2.89   0.004        -28.5   -5.477241
+          American Indian-Asian  |  -3.945436   1.944836    -2.03   0.043    -7.757597   -.1332751
+                 Asian-Hawaiian  |  -17.51149   2.549028    -6.87   0.000    -22.50795   -12.51502
+    White-Black-American Indian  |    6.46679   14.24065     0.45   0.650    -21.44695    34.38053
+           White-Asian-Hawaiian  |   -17.0909   5.819248    -2.94   0.003    -28.49746   -5.684326
+                                 |
+                            year |
+                           2010  |   .6119623   1.470143     0.42   0.677    -2.269732    3.493656
+                           2011  |   .8175245   1.498572     0.55   0.585    -2.119894    3.754943
+                           2012  |  -.5295404   1.568013    -0.34   0.736    -3.603072    2.543992
+                           2013  |  -.4559247   1.498304    -0.30   0.761    -3.392818    2.480969
+                           2014  |  -.3094835   1.371515    -0.23   0.821    -2.997852    2.378885
+                           2015  |    1.10651   1.644891     0.67   0.501    -2.117715    4.330734
+                                 |
+                         educyrs |   .0358356   .0051109     7.01   0.000     .0258176    .0458537
+                           _cons |   11.82877   5.801771     2.04   0.041      .456463    23.20109
+--------------------------------------------------------------------------------------------------
+
+. 
+. estadd local state_fe "Yes": _all
+
+. estadd local year_fe "Yes": _all
+
+. estadd local socio_econ_controls "Yes": _all
+
+. 
+. #delimit ;
+delimiter now ;
+. esttab reg_* using "$root/results/all_tables.tex", replace
+>         keep(travel_work)
+>         wrap booktabs label 
+>         stats(r2 N state_fe year_fe socio_econ_controls, label("R-squared" "Observations" "State FE" "Year FE" "Socioeconomic controls")) 
+>         se star(* 0.10 **       0.05 *** 0.01);
+(output written to /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/all_tables.tex)
+
+. #delimit cr
+delimiter now cr
+. 
+. * IV regression
+. gen ln_earnweek = ln(earnweek)
+(23 missing values generated)
+
+. label variable ln_earnweek "ln weekly earnings"
+
+. 
+. graph box travel_work [pweight=wt06], over(uber) title("Commute duration by Uber entry status (MSA-year)") ytitle("Commute duration (minutes)")
+
+. graph export "$root/results/commute_uber.png", replace
+file /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/commute_uber.png saved as PNG format
+
+. 
+. eststo iv_firststage: reg travel_work uber age i.sex i.msasize i.region ln_earnweek [pweight = wt06], cluster(msacode)
+(sum of wgt is 124,239,695,185.1)
+
+Linear regression                               Number of obs     =     13,158
+                                                F(13, 205)        =      22.26
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0531
+                                                Root MSE          =     35.565
+
+                                        (Std. err. adjusted for 206 clusters in msacode)
+----------------------------------------------------------------------------------------
+                       |               Robust
+           travel_work | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+                  uber |   2.852595   1.379969     2.07   0.040     .1318443    5.573347
+                   age |   .1829146   .0315782     5.79   0.000     .1206549    .2451743
+                       |
+                   sex |
+               Female  |  -5.784715   .7257302    -7.97   0.000    -7.215567   -4.353863
+                       |
+               msasize |
+    100,000 - 249,999  |   4.806131   3.627844     1.32   0.187    -2.346539     11.9588
+    250,000 - 499,999  |    8.16232   3.558841     2.29   0.023     1.145696    15.17894
+    500,000 - 999,999  |   10.10376   3.334242     3.03   0.003     3.529956    16.67756
+1,000,000 - 2,499,999  |   9.640003   3.229651     2.98   0.003     3.272412    16.00759
+2,500,000 - 4,999,999  |    17.2044   3.111427     5.53   0.000      11.0699     23.3389
+           5,000,000+  |   19.38643   3.688145     5.26   0.000     12.11487    26.65798
+                       |
+                region |
+              Midwest  |  -7.574698   2.344775    -3.23   0.001    -12.19766   -2.951731
+                South  |   -3.54008   2.459944    -1.44   0.152    -8.390113    1.309954
+                 West  |  -4.732415   2.378686    -1.99   0.048    -9.422242   -.0425888
+                       |
+           ln_earnweek |    1.16861   .2485242     4.70   0.000     .6786188    1.658601
+                 _cons |   23.42106   4.281923     5.47   0.000     14.97881    31.86332
+----------------------------------------------------------------------------------------
+
+. estadd scalar fstat `e(F)': iv_firststage
+
+. 
+. eststo iv_sleep: ivregress 2sls sleep age i.sex i.msasize i.region (travel_work = uber) [pweight = wt06], cluster(msacode)
+(sum of wgt is   1.2444e+11)
+
+Instrumental variables 2SLS regression            Number of obs   =     13,181
+                                                  Wald chi2(12)   =     160.13
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =          .
+                                                  Root MSE        =     113.19
+
+                                        (Std. err. adjusted for 206 clusters in msacode)
+----------------------------------------------------------------------------------------
+                       |               Robust
+                 sleep | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+           travel_work |   .9928667   1.091586     0.91   0.363    -1.146602    3.132336
+                   age |  -1.393746   .2559753    -5.44   0.000    -1.895448   -.8920436
+                       |
+                   sex |
+               Female  |   15.60188   7.593641     2.05   0.040     .7186163    30.48514
+                       |
+               msasize |
+    100,000 - 249,999  |   10.00018   9.907162     1.01   0.313    -9.417504    29.41786
+    250,000 - 499,999  |   1.035919   12.25622     0.08   0.933    -22.98583    25.05767
+    500,000 - 999,999  |  -5.859633   14.26022    -0.41   0.681    -33.80915    22.08989
+1,000,000 - 2,499,999  |  -3.717067   13.49986    -0.28   0.783    -30.17631    22.74217
+2,500,000 - 4,999,999  |  -12.26056   23.04369    -0.53   0.595    -57.42535    32.90423
+           5,000,000+  |  -14.49709   26.18252    -0.55   0.580    -65.81389    36.81972
+                       |
+                region |
+              Midwest  |   13.74693   10.87275     1.26   0.206    -7.563278    35.05714
+                South  |   9.771138   6.999897     1.40   0.163    -3.948407    23.49068
+                 West  |   15.40449   8.541705     1.80   0.071    -1.336942    32.14593
+                       |
+                 _cons |   467.8532   35.25313    13.27   0.000     398.7583    536.9481
+----------------------------------------------------------------------------------------
+Instrumented: travel_work
+ Instruments: age 2.sex 2.msasize 3.msasize 4.msasize 5.msasize 6.msasize 7.msasize
+              2.region 3.region 4.region uber
+
+. eststo iv_food: ivregress 2sls food_preparation age i.sex i.msasize i.region (travel_work = uber age) [pweight = wt06], cluster(msacode)
+(sum of wgt is   1.2444e+11)
+
+Instrumental variables 2SLS regression            Number of obs   =     13,181
+                                                  Wald chi2(12)   =     510.57
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =          .
+                                                  Root MSE        =     31.199
+
+                                        (Std. err. adjusted for 206 clusters in msacode)
+----------------------------------------------------------------------------------------
+                       |               Robust
+      food_preparation | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+           travel_work |   .3519492   .3192089     1.10   0.270    -.2736887    .9775871
+                   age |    .171599   .0747455     2.30   0.022     .0251006    .3180974
+                       |
+                   sex |
+               Female  |   15.25248   2.072282     7.36   0.000     11.19088    19.31408
+                       |
+               msasize |
+    100,000 - 249,999  |    .670168   1.738945     0.39   0.700    -2.738101    4.078437
+    250,000 - 499,999  |  -.4141585   2.318647    -0.18   0.858    -4.958622    4.130305
+    500,000 - 999,999  |  -1.581068   2.958329    -0.53   0.593    -7.379286    4.217151
+1,000,000 - 2,499,999  |  -2.955587   2.943983    -1.00   0.315    -8.725687    2.814513
+2,500,000 - 4,999,999  |  -6.644896   5.536514    -1.20   0.230    -17.49626    4.206472
+           5,000,000+  |  -7.142922   6.443655    -1.11   0.268    -19.77225    5.486409
+                       |
+                region |
+              Midwest  |   .7997116   2.465548     0.32   0.746    -4.032674    5.632098
+                South  |  -.2891211   1.541088    -0.19   0.851    -3.309597    2.731355
+                 West  |    1.22196   1.682259     0.73   0.468    -2.075207    4.519127
+                       |
+                 _cons |  -8.908211    9.94742    -0.90   0.371    -28.40479    10.58837
+----------------------------------------------------------------------------------------
+Instrumented: travel_work
+ Instruments: age 2.sex 2.msasize 3.msasize 4.msasize 5.msasize 6.msasize 7.msasize
+              2.region 3.region 4.region uber
+
+. eststo iv_exercise: ivregress 2sls participate_exercise age i.sex i.msasize i.region (travel_work = uber) [pweight = wt06], cluster(msacode)
+(sum of wgt is   1.2444e+11)
+
+Instrumental variables 2SLS regression            Number of obs   =     13,181
+                                                  Wald chi2(12)   =      98.04
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0072
+                                                  Root MSE        =     34.239
+
+                                        (Std. err. adjusted for 206 clusters in msacode)
+----------------------------------------------------------------------------------------
+                       |               Robust
+  participate_exercise | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+           travel_work |   .0017886   .2797186     0.01   0.995    -.5464498     .550027
+                   age |  -.1694536   .0603189    -2.81   0.005    -.2876764   -.0512308
+                       |
+                   sex |
+               Female  |  -2.714412   2.258023    -1.20   0.229    -7.140056    1.711232
+                       |
+               msasize |
+    100,000 - 249,999  |   9.712253   2.731806     3.56   0.000     4.358011    15.06649
+    250,000 - 499,999  |   9.013764   2.766292     3.26   0.001     3.591931     14.4356
+    500,000 - 999,999  |   8.597374   3.270229     2.63   0.009     2.187844     15.0069
+1,000,000 - 2,499,999  |   9.086378   2.966609     3.06   0.002     3.271931    14.90082
+2,500,000 - 4,999,999  |   8.703659   5.201089     1.67   0.094    -1.490288    18.89761
+           5,000,000+  |    7.03523   5.528716     1.27   0.203    -3.800854    17.87131
+                       |
+                region |
+              Midwest  |    .925847   2.805789     0.33   0.741    -4.573399    6.425093
+                South  |  -.6319953   1.639658    -0.39   0.700    -3.845665    2.581675
+                 West  |    1.90718   1.704291     1.12   0.263    -1.433169     5.24753
+                       |
+                 _cons |   11.16685   9.997391     1.12   0.264    -8.427676    30.76138
+----------------------------------------------------------------------------------------
+Instrumented: travel_work
+ Instruments: age 2.sex 2.msasize 3.msasize 4.msasize 5.msasize 6.msasize 7.msasize
+              2.region 3.region 4.region uber
+
+. 
+. estadd local msa_pop "Yes": _all
+
+. estadd local demographic "Yes": _all
+
+. estadd local region "Yes": _all
+
+. 
+. #delimit ;
+delimiter now ;
+. esttab iv_* using "$root/results/iv_tables.tex", replace
+>         keep (travel_work uber)
+>         wrap booktabs label 
+>         stats(fstat r2 N msa_pop demographic region, label("First-stage F" "R-squared" "Observations" "MSA population controls" "Demographic controls" "U.S. Region Controls")) 
+>         se star(* 0.10 **       0.05 *** 0.01);
+(output written to /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/results/iv_tables.tex)
+
+. #delimit cr
+delimiter now cr
+. 
+. 
+end of do-file
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/jacobjjli/Library/CloudStorage/OneDrive-UniversityofToronto/Documents/School/1-4 ECO481/commuting_and_health/build_log.log
+  log type:  text
+ closed on:  10 Dec 2023, 16:41:43
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
