@@ -1,7 +1,7 @@
 # Work results
 data/derived/
 results
-.log
+*.log
 
 ################################################################################
 ### End of default gitignore
