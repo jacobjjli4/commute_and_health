@@ -2,6 +2,7 @@
 data/derived/
 results
 *.log
+.DS_Store
 
 ################################################################################
 ### End of default gitignore
