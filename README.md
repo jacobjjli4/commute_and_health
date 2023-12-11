@@ -11,4 +11,7 @@ Data sources are documented and stored in `data/raw`. All code is written in the
 
 All numbers reported in the paper are exported to the `results/results.yaml` file or to one of the figures and tables.
 
+## Paper
+Files for the paper creation (a Latex file, a Latex class, and a bibliography file) are stored in `paper/`. You can recreate the paper by setting the \opath command in `paper/eco481_paper.cls` to the `results/` directory on your computer.
+
 
