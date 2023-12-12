@@ -18,4 +18,6 @@ The cleaned data, log files, figures, and graphs are not tracked in version cont
 ## Paper
 Files for the paper creation (a Latex file, a Latex class, and a bibliography file) are stored in `paper/`. You can recreate the paper by setting the \opath command in `paper/eco481_paper.cls` to the `results/` directory on your computer.
 
+You can download the paper and replication code by clicking on "Releases" on the right of the GitHub interface.
+
 
